@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Register</title>
+  <link rel="stylesheet" href="login.css">
+</head>
+<body>
+  <div class="form-container">
+    <h2>Register</h2>
+    <form onsubmit="return registerUser(event)">
+      <input type="text" id="regUsername" placeholder="Choose Username" required />
+      <input type="email" id="regEmail" placeholder="Enter Email" required />
+      <input type="password" id="regPassword" placeholder="Choose Password" required oninput="checkStrength()" />
+      <small id="strengthMsg" style="color: red;"></small><br>
+      <label><input type="checkbox" onclick="togglePassword('regPassword')"> Show Password</label>
+      <button type="submit">Register</button>
+      <p>Already have an account? <a href="login.html">Login here</a></p>
+    </form>
+  </div>
+
+  <script>
+    function togglePassword(id) {
+      const field = document.getElementById(id);
+      field.type = field.type === "password" ? "text" : "password";
+    }
+
+    function checkStrength() {
+      const pwd = document.getElementById("regPassword").value;
+      const msg = document.getElementById("strengthMsg");
+      const strongRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+      msg.textContent = strongRegex.test(pwd)
+        ? "Strong Password"
+        : "Must be 8+ chars, include number & special char";
+      msg.style.color = strongRegex.test(pwd) ? "green" : "red";
+    }
+
+    function registerUser(e) {
+      e.preventDefault();
+      const username = document.getElementById("regUsername").value.trim();
+      const email = document.getElementById("regEmail").value.trim();
+      const password = document.getElementById("regPassword").value.trim();
+      const strongRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+
+      if (!strongRegex.test(password)) {
+        alert("Password does not meet strength requirements.");
+        return false;
+      }
+
+      const user = { username, email, password };
+      localStorage.setItem("user", JSON.stringify(user));
+      alert("Registration successful!");
+      window.location.href = "login.html";
+    }
+  </script>
+</body>
+</html>
